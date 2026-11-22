@@ -93,12 +93,11 @@ hwyAcOn DWORD 16, 20, 15, 15, 13, 12, 14, 14, 15, 15
     DWORD 9, 11, 10, 11, 13, 10, 10, 11, 9, 7
 
 ; shared trip and ECU state variables
-
-tripConfigured BYTE 0 ; 0 = not planned yet, 1 = planned
+tripConfigured BYTE 0
 selectedCarIdx DWORD 0
 selectedTankCap DWORD 0
-routeType DWORD 1 ; 1 = City, 2 = Highway
-acState DWORD 1 ; 1 = AC Off, 2 = AC On
+routeType DWORD 1
+acState DWORD 1
 effectiveMileage DWORD 0
 
 tripDistance DWORD 0
@@ -112,110 +111,100 @@ perPersonCost DWORD 0
 currentRangeKM DWORD 0
 deficitLiters DWORD 0
 topUpCostPKR DWORD 0
-refuelRequired BYTE 0 ; 0 = No, 1 = Yes
+refuelRequired BYTE 0
 
-telematicsFlag BYTE 0 ; 8-bit ECU status register
+telematicsFlag BYTE 0
 co2EmissionsKG DWORD 0
 ecoGradeChar BYTE 'B'
 
 ; menu and prompt strings
-
 appTitle BYTE "DRIVELOGIX: Embedded Vehicle Telematics & Trip Economy Engine", 0
-menuHeader BYTE "--- MAIN CONSOLE MENU ---", 0
-menuOpt1 BYTE "[1] Plan New Trip (Select Vehicle, Route, AC, Fuel & Cost Split)", 0
-menuOpt2 BYTE "[2] Range & Refueling Validator (Tank Range vs Trip Distance)", 0
-menuOpt3 BYTE "[3] Run 8-Bit ECU Telematics Diagnostics (Sensor Bitmask Check)", 0
-menuOpt4 BYTE "[4] Display Trip Eco-Analytics (CO2 Emissions & Driver Grade)", 0
-menuOpt5 BYTE "[5] Save Trip Diagnostic Report to File (DriveLogix_Report.txt)", 0
-menuOpt6 BYTE "[6] Exit DriveLogix Engine", 0
-promptMenu BYTE "Enter your choice [1 - 6]: ", 0
+menuHeader BYTE "MAIN CONSOLE MENU", 0
+menuOpt1 BYTE "1. Plan New Trip (Select Vehicle, Route, AC, Fuel & Cost Split)", 0
+menuOpt2 BYTE "2. Range & Refueling Validator (Tank Range vs Trip Distance)", 0
+menuOpt3 BYTE "3. Run 8-Bit ECU Telematics Diagnostics (Sensor Check)", 0
+menuOpt4 BYTE "4. Display Trip Eco-Analytics (CO2 Emissions & Driver Grade)", 0
+menuOpt5 BYTE "5. Save Trip Diagnostic Report to File (DriveLogix_Report.txt)", 0
+menuOpt6 BYTE "6. Exit DriveLogix Engine", 0
+promptMenu BYTE "Enter your choice (1 - 6): ", 0
 msgInvalid BYTE "Invalid input! Please enter a valid number within range.", 0
-msgNoTrip BYTE "Please plan a trip first using Option [1]!", 0
+msgNoTrip BYTE "Please plan a trip first using Option 1!", 0
 
 ; module 1 strings
-
-catHeader BYTE "--- PAKISTANI VEHICLE CATALOG (ID: 0 to 49) ---", 0
-catBracketL BYTE "[", 0
-catBracketR BYTE "] ", 0
-catSpacer BYTE "  |  ", 0
-promptCarID BYTE "Enter Vehicle ID [0 - 49]: ", 0
+catHeader BYTE "PAKISTANI VEHICLE CATALOG (ID: 0 to 49)", 0
+catBracketL BYTE "(", 0
+catBracketR BYTE ") ", 0
+promptCarID BYTE "Enter Vehicle ID (0 - 49): ", 0
 promptRoute BYTE "Select Route Type (1 = City Urban, 2 = Highway/Motorway): ", 0
 promptAC BYTE "Select Climate Control (1 = AC Off, 2 = AC On): ", 0
-msgCarSel BYTE "Selected Vehicle  : ", 0
+msgCarSel BYTE "Selected Vehicle: ", 0
 msgTankCap BYTE "Fuel Tank Capacity: ", 0
-msgEffMil BYTE "Effective Mileage : ", 0
+msgEffMil BYTE "Effective Mileage: ", 0
 msgKmL BYTE " km/L", 0
 msgLiters BYTE " Liters", 0
 
 ; module 2 strings
-
 promptDist BYTE "Enter Trip Distance (km): ", 0
 promptRate BYTE "Enter Petrol Price (PKR/Liter): ", 0
 promptPass BYTE "Enter Number of Passengers (min 1): ", 0
 promptFuel BYTE "Enter Current Fuel in Tank (Liters): ", 0
-m2Header BYTE "--- MODULE 2: FUEL & EXPENSE BREAKDOWN ---", 0
-msgFuelReq BYTE "Total Fuel Required : ", 0
-msgTotCost BYTE "Total Trip Expense  : PKR ", 0
-msgPerPass BYTE "Cost Per Passenger  : PKR ", 0
+m2Header BYTE "MODULE 2: FUEL & EXPENSE BREAKDOWN", 0
+msgFuelReq BYTE "Total Fuel Required: ", 0
+msgTotCost BYTE "Total Trip Expense: PKR ", 0
+msgPerPass BYTE "Cost Per Passenger: PKR ", 0
 
 ; module 3 strings
-
-m3Header BYTE "--- MODULE 3: RANGE & REFUELING VALIDATOR ---", 0
+m3Header BYTE "MODULE 3: RANGE & REFUELING VALIDATOR", 0
 msgCurRange BYTE "Estimated Tank Range: ", 0
-msgTripDist BYTE "Planned Trip Length : ", 0
+msgTripDist BYTE "Planned Trip Length: ", 0
 msgKmUnit BYTE " km", 0
-msgRangeOK BYTE "STATUS: Sufficient fuel in tank. No refueling stop required.", 0
-msgRangeLow BYTE "ALERT : Mandatory refueling stop required before/during trip!", 0
-msgDeficit BYTE "Fuel Deficit Needed : ", 0
-msgTopUp BYTE "Minimum Top-Up Cost : PKR ", 0
+msgRangeOK BYTE "Sufficient fuel in tank. No refueling stop required.", 0
+msgRangeLow BYTE "Warning: Refueling stop required before or during trip!", 0
+msgDeficit BYTE "Fuel Deficit Needed: ", 0
+msgTopUp BYTE "Minimum Top-Up Cost: PKR ", 0
 
 ; module 4 strings
-
-m4Header BYTE "--- MODULE 4: 8-BIT ECU TELEMATICS DIAGNOSTICS ---", 0
+m4Header BYTE "MODULE 4: 8-BIT ECU TELEMATICS DIAGNOSTICS", 0
 promptSpeed BYTE "Enter Current Vehicle Speed (km/h): ", 0
 promptRPM BYTE "Enter Current Engine RPM (e.g. 2500): ", 0
 promptTemp BYTE "Enter Engine Coolant Temp (Celsius, e.g. 90): ", 0
 msgRegBin BYTE "ECU 8-Bit Status Register (Binary): ", 0
-msgEcuOK BYTE "[OK] All ECU parameters normal. Zero hazard flags active.", 0
-msgBit0 BYTE "[HAZARD - BIT 0] OVERSPEED WARNING (> 120 km/h)!", 0
-msgBit1 BYTE "[HAZARD - BIT 1] HIGH RPM WARNING (> 4500 RPM)!", 0
-msgBit2 BYTE "[ADVISORY - BIT 2] LOW FUEL RESERVE WARNING (< 15% Tank Capacity)!", 0
-msgBit3 BYTE "[HAZARD - BIT 3] ENGINE OVERHEATING (> 105 C)!", 0
+msgEcuOK BYTE "All ECU parameters normal. Zero hazard flags active.", 0
+msgBit0 BYTE "Overspeed Warning (> 120 km/h)", 0
+msgBit1 BYTE "High RPM Warning (> 4500 RPM)", 0
+msgBit2 BYTE "Low Fuel Reserve Warning (< 15% Tank Capacity)", 0
+msgBit3 BYTE "Engine Overheating Warning (> 105 C)", 0
 
 ; module 5 strings
-
-m5Header BYTE "--- MODULE 5: ECO-ANALYTICS & CARBON FOOTPRINT ---", 0
-msgCO2 BYTE "Estimated CO2 Emissions : ", 0
+m5Header BYTE "MODULE 5: ECO-ANALYTICS & CARBON FOOTPRINT", 0
+msgCO2 BYTE "Estimated CO2 Emissions: ", 0
 msgKgUnit BYTE " kg", 0
 msgGradeA BYTE "Driver Efficiency Rating: GRADE A (Optimal Eco-Performance)", 0
 msgGradeB BYTE "Driver Efficiency Rating: GRADE B (Moderate Consumption)", 0
 msgGradeC BYTE "Driver Efficiency Rating: GRADE C (High Consumption / Hazard)", 0
 
-; file output strings and buffer
-
+; file output strings
 fileName BYTE "DriveLogix_Report.txt", 0
-fileHandle HANDLE ?
-reportBuf BYTE 1024 DUP(0)
-bufIdx DWORD 0
+fileHandle DWORD ?
 
-fLine2 BYTE "DRIVELOGIX: TRIP & TELEMATICS DIAGNOSTIC REPORT", 0Dh, 0Ah, 0
-fVehicle BYTE "Vehicle Model: ", 0
-fMileage BYTE "Effective Mileage: ", 0
-fDistance BYTE "Trip Distance (km): ", 0
-fFuelReq BYTE "Fuel Required (L): ", 0
-fTotalCost BYTE "Total Cost (PKR): ", 0
-fSplitCost BYTE "Per Passenger (PKR): ", 0
-fRefuel BYTE "Refuel Deficit (L): ", 0
-fCO2 BYTE "CO2 Footprint (kg): ", 0
-fGrade BYTE "Eco Efficiency Grd: ", 0
-fNewLine BYTE 0Dh, 0Ah, 0
+fLine2 BYTE "DRIVELOGIX: TRIP & TELEMATICS DIAGNOSTIC REPORT", 0Dh, 0Ah
+fVehicle BYTE "Vehicle Model: "
+fRouteCity BYTE "Route Type: City Urban", 0Dh, 0Ah
+fRouteHwy BYTE "Route Type: Highway/Motorway", 0Dh, 0Ah
+fAcOff BYTE "Climate Control: AC Off", 0Dh, 0Ah
+fAcOn BYTE "Climate Control: AC On", 0Dh, 0Ah
+fRefuelNo BYTE "Refuel Status: Sufficient Fuel", 0Dh, 0Ah
+fRefuelYes BYTE "Refuel Status: Refueling Stop Required", 0Dh, 0Ah
+fEcuNormal BYTE "ECU Status: All Parameters Normal", 0Dh, 0Ah
+fEcuWarn BYTE "ECU Status: Active Hazard Flags Detected", 0Dh, 0Ah
+fGrade BYTE "Eco Efficiency Grade: "
+fNewLine BYTE 0Dh, 0Ah
 msgFileOK BYTE "Report successfully saved to DriveLogix_Report.txt!", 0
 msgFileErr BYTE "Error: Could not create output file.", 0
 msgBye BYTE "Exiting DriveLogix Engine. Drive safely!", 0
 
 .code
 
-; main menu controller
 main PROC
 MenuLoop:
     call Clrscr
@@ -332,7 +321,6 @@ ExitProgram:
     exit
 main ENDP
 
-; module 1: vehicle catalog and parallel array lookup
 Module1_SelectVehicle PROC
     call Clrscr
     mov eax, lightCyan + (black * 16)
@@ -341,14 +329,12 @@ Module1_SelectVehicle PROC
     call WriteString
     call Crlf
 
-    ; displaying all 50 vehicles in 2 columns (25 rows)
     mov eax, lightGray + (black * 16)
     call SetTextColor
     mov esi, 0
-    mov ecx, 25
+    mov ecx, TOTAL_CARS
 
 CatalogLoop:
-    ; left column (0 to 24)
     mov edx, OFFSET catBracketL
     call WriteString
     mov eax, esi
@@ -356,20 +342,6 @@ CatalogLoop:
     mov edx, OFFSET catBracketR
     call WriteString
     mov edx, carNames[esi * 4]
-    call WriteString
-
-    ; right column (25 to 49)
-    mov edx, OFFSET catSpacer
-    call WriteString
-    mov edi, esi
-    add edi, 25
-    mov edx, OFFSET catBracketL
-    call WriteString
-    mov eax, edi
-    call WriteDec
-    mov edx, OFFSET catBracketR
-    call WriteString
-    mov edx, carNames[edi * 4]
     call WriteString
     call Crlf
 
@@ -426,7 +398,6 @@ AskAC:
 ValidAC:
     mov acState, eax
 
-    ; indexed lookup using esi * 4
     mov esi, selectedCarIdx
     mov eax, tankCapacities[esi * 4]
     mov selectedTankCap, eax
@@ -434,7 +405,6 @@ ValidAC:
     cmp routeType, 1
     jne CheckHighway
 
-    ; city mileage
     cmp acState, 1
     jne CityWithAC
     mov eax, cityAcOff[esi * 4]
@@ -445,18 +415,17 @@ CityWithAC:
     jmp StoreMileage
 
 CheckHighway:
-    ; highway mileage
     cmp acState, 1
     jne HwyWithAC
     mov eax, hwyAcOff[esi * 4]
     jmp StoreMileage
+
 HwyWithAC:
     mov eax, hwyAcOn[esi * 4]
 
 StoreMileage:
     mov effectiveMileage, eax
 
-    ; displaying selected vehicle summary
     call Crlf
     mov eax, lightGreen + (black * 16)
     call SetTextColor
@@ -484,10 +453,7 @@ StoreMileage:
     call Crlf
     call Crlf
     ret
-
 Module1_SelectVehicle ENDP
-
-; module 2: fuel volume, PKR cost and passenger split
 
 Module2_FuelAndCost PROC
     mov eax, white + (black * 16)
@@ -525,23 +491,15 @@ AskTank:
     jl AskTank
     mov currentFuel, eax
 
-    ; liters needed = distance / effective mileage
     mov eax, tripDistance
     mov edx, 0
     div effectiveMileage
-    cmp edx, 0 ; round up by 1 liter if remainder > 0
-    je ExactLiters
-    inc eax
-
-ExactLiters:
     mov litersNeeded, eax
 
-    ; total cost = liters needed * petrol rate
     mov eax, litersNeeded
     imul eax, petrolRate
     mov totalCostPKR, eax
 
-    ; per-passenger cost = total cost / passenger count
     mov eax, totalCostPKR
     mov edx, 0
     div passengerCount
@@ -549,7 +507,6 @@ ExactLiters:
 
     mov tripConfigured, 1
 
-    ; display module 2 output
     call Crlf
     mov eax, lightCyan + (black * 16)
     call SetTextColor
@@ -581,9 +538,6 @@ ExactLiters:
     ret
 Module2_FuelAndCost ENDP
 
-; module 3: tank range check and refuel deficit detector
-
-
 Module3_RangeValidator PROC
     call Clrscr
     mov eax, lightCyan + (black * 16)
@@ -593,7 +547,6 @@ Module3_RangeValidator PROC
     call Crlf
     call Crlf
 
-    ; current range = current fuel * effective mileage
     mov eax, currentFuel
     imul eax, effectiveMileage
     mov currentRangeKM, eax
@@ -621,7 +574,6 @@ Module3_RangeValidator PROC
     cmp eax, tripDistance
     jl NeedsRefuel
 
-    ; sufficient fuel
     mov refuelRequired, 0
     mov deficitLiters, 0
     mov topUpCostPKR, 0
@@ -663,8 +615,6 @@ NeedsRefuel:
     ret
 Module3_RangeValidator ENDP
 
-; module 4: 8-bit ECU telematics bitmask check
-
 Module4_TelematicsCheck PROC
     call Clrscr
     mov eax, lightCyan + (black * 16)
@@ -674,11 +624,10 @@ Module4_TelematicsCheck PROC
     call Crlf
     call Crlf
 
-    mov telematicsFlag, 0 ; reset 8-bit status register
+    mov telematicsFlag, 0
     mov eax, white + (black * 16)
     call SetTextColor
 
-    ; bit 0: speed > 120 km/h
     mov edx, OFFSET promptSpeed
     call WriteString
     call ReadInt
@@ -687,7 +636,6 @@ Module4_TelematicsCheck PROC
     or telematicsFlag, 00000001b
 
 CheckRPM:
-    ; bit 1: RPM > 4500
     mov edx, OFFSET promptRPM
     call WriteString
     call ReadInt
@@ -696,7 +644,6 @@ CheckRPM:
     or telematicsFlag, 00000010b
 
 CheckTemp:
-    ; bit 3: coolant temp > 105 C
     mov edx, OFFSET promptTemp
     call WriteString
     call ReadInt
@@ -705,7 +652,6 @@ CheckTemp:
     or telematicsFlag, 00001000b
 
 CheckLowFuel:
-    ; bit 2: current fuel < 15% of tank capacity
     cmp tripConfigured, 0
     je DecodeFlags
     mov eax, currentFuel
@@ -736,7 +682,6 @@ DecodeFlags:
     ret
 
 EvaluateBits:
-    ; testing bit 0 (overspeed)
     test telematicsFlag, 00000001b
     jz TestBit1
     mov eax, lightRed + (black * 16)
@@ -746,7 +691,6 @@ EvaluateBits:
     call Crlf
 
 TestBit1:
-    ; testing bit 1 (high RPM)
     test telematicsFlag, 00000010b
     jz TestBit2
     mov eax, lightRed + (black * 16)
@@ -756,7 +700,6 @@ TestBit1:
     call Crlf
 
 TestBit2:
-    ; testing bit 2 (low fuel advisory)
     test telematicsFlag, 00000100b
     jz TestBit3
     mov eax, yellow + (black * 16)
@@ -766,7 +709,6 @@ TestBit2:
     call Crlf
 
 TestBit3:
-    ; testing bit 3 (Engine Overheating)
     test telematicsFlag, 00001000b
     jz DoneDecode
     mov eax, lightRed + (black * 16)
@@ -779,8 +721,6 @@ DoneDecode:
     ret
 Module4_TelematicsCheck ENDP
 
-; module 5: eco-analytics and CO2 grader
-
 Module5_EcoAnalytics PROC
     call Clrscr
     mov eax, lightCyan + (black * 16)
@@ -790,7 +730,6 @@ Module5_EcoAnalytics PROC
     call Crlf
     call Crlf
 
-    ; CO2 emissions (kg) = liters needed * 2
     mov eax, litersNeeded
     shl eax, 1
     mov co2EmissionsKG, eax
@@ -806,7 +745,6 @@ Module5_EcoAnalytics PROC
     call Crlf
     call Crlf
 
-    ; checking if any critical hazard flags are active (bits 0, 1, 3)
     test telematicsFlag, 00001011b
     jnz AssignGradeC
 
@@ -817,7 +755,6 @@ Module5_EcoAnalytics PROC
     cmp eax, 15
     jl AssignGradeB
 
-    ; grade A (>= 15 km/L and no hazards)
     mov ecoGradeChar, 'A'
     mov eax, lightGreen + (black * 16)
     call SetTextColor
@@ -845,101 +782,97 @@ AssignGradeC:
     ret
 Module5_EcoAnalytics ENDP
 
-; file export
-
 SaveReportToFile PROC
-    mov bufIdx, 0
-
-    ; header
-    mov esi, OFFSET fLine2
-    call AppendStrToBuf
-
-
-    ; vehicle name
-    mov esi, OFFSET fVehicle
-    call AppendStrToBuf
-    mov eax, selectedCarIdx
-    mov esi, carNames[eax * 4]
-    call AppendStrToBuf
-    mov esi, OFFSET fNewLine
-    call AppendStrToBuf
-
-    ; effective mileage
-    mov esi, OFFSET fMileage
-    call AppendStrToBuf
-    mov eax, effectiveMileage
-    call AppendNumToBuf
-    mov esi, OFFSET fNewLine
-    call AppendStrToBuf
-
-    ; trip distance
-    mov esi, OFFSET fDistance
-    call AppendStrToBuf
-    mov eax, tripDistance
-    call AppendNumToBuf
-    mov esi, OFFSET fNewLine
-    call AppendStrToBuf
-
-    ; fuel required
-    mov esi, OFFSET fFuelReq
-    call AppendStrToBuf
-    mov eax, litersNeeded
-    call AppendNumToBuf
-    mov esi, OFFSET fNewLine
-    call AppendStrToBuf
-
-    ; total cost
-    mov esi, OFFSET fTotalCost
-    call AppendStrToBuf
-    mov eax, totalCostPKR
-    call AppendNumToBuf
-    mov esi, OFFSET fNewLine
-    call AppendStrToBuf
-
-    ; per passenger cost
-    mov esi, OFFSET fSplitCost
-    call AppendStrToBuf
-    mov eax, perPersonCost
-    call AppendNumToBuf
-    mov esi, OFFSET fNewLine
-    call AppendStrToBuf
-
-    ; refuel deficit
-    mov esi, OFFSET fRefuel
-    call AppendStrToBuf
-    mov eax, deficitLiters
-    call AppendNumToBuf
-    mov esi, OFFSET fNewLine
-    call AppendStrToBuf
-
-    ; CO2 footprint
-    mov esi, OFFSET fCO2
-    call AppendStrToBuf
-    mov eax, co2EmissionsKG
-    call AppendNumToBuf
-    mov esi, OFFSET fNewLine
-    call AppendStrToBuf
-
-    ; eco grade
-    mov esi, OFFSET fGrade
-    call AppendStrToBuf
-    mov edi, bufIdx
-    mov al, ecoGradeChar
-    mov reportBuf[edi], al
-    inc bufIdx
-    mov esi, OFFSET fNewLine
-    call AppendStrToBuf
-
-    ; create, write and close file
     mov edx, OFFSET fileName
     call CreateOutputFile
-    cmp eax, INVALID_HANDLE_VALUE
+    cmp eax, -1
     je FileFailed
     mov fileHandle, eax
 
     mov eax, fileHandle
-    mov edx, OFFSET reportBuf
-    mov ecx, bufIdx
+    mov edx, OFFSET fLine2
+    mov ecx, LENGTHOF fLine2
+    call WriteToFile
+
+    mov eax, fileHandle
+    mov edx, OFFSET fVehicle
+    mov ecx, LENGTHOF fVehicle
+    call WriteToFile
+
+    mov esi, selectedCarIdx
+    mov edx, carNames[esi * 4]
+    INVOKE Str_length, edx
+    mov ecx, eax
+    mov eax, fileHandle
+    mov edx, carNames[esi * 4]
+    call WriteToFile
+
+    mov eax, fileHandle
+    mov edx, OFFSET fNewLine
+    mov ecx, LENGTHOF fNewLine
+    call WriteToFile
+
+    cmp routeType, 1
+    jne WriteHwy
+    mov edx, OFFSET fRouteCity
+    mov ecx, LENGTHOF fRouteCity
+    jmp DoWriteRoute
+WriteHwy:
+    mov edx, OFFSET fRouteHwy
+    mov ecx, LENGTHOF fRouteHwy
+DoWriteRoute:
+    mov eax, fileHandle
+    call WriteToFile
+
+    cmp acState, 1
+    jne WriteAcOn
+    mov edx, OFFSET fAcOff
+    mov ecx, LENGTHOF fAcOff
+    jmp DoWriteAC
+WriteAcOn:
+    mov edx, OFFSET fAcOn
+    mov ecx, LENGTHOF fAcOn
+DoWriteAC:
+    mov eax, fileHandle
+    call WriteToFile
+
+    cmp refuelRequired, 0
+    jne WriteRefuelYes
+    mov edx, OFFSET fRefuelNo
+    mov ecx, LENGTHOF fRefuelNo
+    jmp DoWriteRefuel
+WriteRefuelYes:
+    mov edx, OFFSET fRefuelYes
+    mov ecx, LENGTHOF fRefuelYes
+DoWriteRefuel:
+    mov eax, fileHandle
+    call WriteToFile
+
+    cmp telematicsFlag, 0
+    jne WriteEcuWarn
+    mov edx, OFFSET fEcuNormal
+    mov ecx, LENGTHOF fEcuNormal
+    jmp DoWriteEcu
+WriteEcuWarn:
+    mov edx, OFFSET fEcuWarn
+    mov ecx, LENGTHOF fEcuWarn
+DoWriteEcu:
+    mov eax, fileHandle
+    call WriteToFile
+
+    mov eax, fileHandle
+    mov edx, OFFSET fGrade
+    mov ecx, LENGTHOF fGrade
+    call WriteToFile
+
+    mov eax, fileHandle
+    mov edx, OFFSET ecoGradeChar
+    mov ecx, 1
+    call WriteToFile
+
+    mov eax, fileHandle
+    mov edx, OFFSET fNewLine
+    mov ecx, LENGTHOF fNewLine
     call WriteToFile
 
     mov eax, fileHandle
@@ -960,43 +893,5 @@ FileFailed:
     call Crlf
     ret
 SaveReportToFile ENDP
-
-AppendStrToBuf PROC
-    mov edi, bufIdx
-CopyCharLoop:
-    mov al, [esi]
-    cmp al, 0
-    je DoneCopyStr
-    mov reportBuf[edi], al
-    inc esi
-    inc edi
-    jmp CopyCharLoop
-DoneCopyStr:
-    mov bufIdx, edi
-    ret
-AppendStrToBuf ENDP
-
-; converts unsigned int in eax to ASCII digits and appends to reportBuf
-AppendNumToBuf PROC
-    mov ecx, 0 ; digit counter
-    mov ebx, 10
-ConvertLoop:
-    mov edx, 0
-    div ebx ; eax = quotient, edx = remainder
-    add dl, '0' ; convert remainder to ASCII
-    push edx ; push digit onto stack
-    inc ecx
-    cmp eax, 0
-    jne ConvertLoop
-
-    mov edi, bufIdx
-PopDigitsLoop:
-    pop eax
-    mov reportBuf[edi], al
-    inc edi
-    loop PopDigitsLoop
-    mov bufIdx, edi
-    ret
-AppendNumToBuf ENDP
 
 END main
