@@ -1,4 +1,4 @@
-# DriveLogix — x86 Vehicle Telematics & Trip Economy Engine
+# DriveLogix: x86 Vehicle Telematics & Trip Economy Engine
 
 A console-based vehicle telematics and trip economy engine written in 32-bit x86 Assembly Language (MASM) using Kip Irvine's `Irvine32` library. Built for the **EL-2003 Computer Organization and Assembly Language (COAL) Lab** (Fall 2026) at FAST-NUCES Karachi.
 
