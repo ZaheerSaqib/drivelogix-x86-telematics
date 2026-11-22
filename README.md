@@ -1,59 +1,75 @@
 # DriveLogix — x86 Vehicle Telematics & Trip Economy Engine
 
-A 32-bit x86 Assembly Language (`MASM`) console application built with the **Irvine32** library. DriveLogix models automotive Electronic Control Unit (ECU) logic, parallel-array vehicle lookup across 50 Pakistani vehicles, integer-based trip fuel/expense splitting, range validation, bitwise sensor diagnostics, and persistent text report generation.
+A console-based vehicle telematics and trip economy engine written in 32-bit x86 Assembly Language (MASM) using Kip Irvine's `Irvine32` library. Built for the **EL-2003 Computer Organization and Assembly Language (COAL) Lab** (Fall 2026) at FAST-NUCES Karachi.
+
+## Group Information (BDS-3A-02)
+
+| Member | Roll Number | Role / Modules |
+| :--- | :--- | :--- |
+| **Muhammad Zaheer** | 25K-2515 | Group Leader — Main Menu, Module 1 (50-Vehicle Catalog & Indexed Lookup), Module 5 (Eco-Analytics) |
+| **Muhammad Ahmed Asif** | 25K-2511 | Module 2 (Fuel & Expense Split), Module 3 (Range & Refueling Validator) |
+| **Muhammad Yousuf** | 25K-2534 | Module 4 (8-Bit ECU Telematics Diagnostics), File Export (`SaveReportToFile`) |
+
+* **Section:** BDS-3A
+* **Lab Instructor:** Mr. Abdullah Shaikh
 
 ---
 
-## Core Modules & Features
+## Core Modules
 
-1. **50-Vehicle Catalog & Indexed Lookup (`Module1_SelectVehicle`)**
-   - Stores 50 Pakistani vehicle models across parallel `DWORD` arrays (`carNames`, `tankCapacities`, `cityAcOff`, `cityAcOn`, `hwyAcOff`, `hwyAcOn`).
-   - Uses scaled indexed addressing (`[esi * 4]`) on an array of 32-bit string `OFFSET` pointers for constant-time $O(1)$ lookup across City/Highway routes and AC states.
-2. **Fuel & Passenger Cost Split Engine (`Module2_FuelAndCost`)**
-   - Computes required fuel volume with remainder ceiling rounding (`DIV`), total trip expense in PKR (`IMUL`), and equal per-passenger cost splitting.
-3. **Autonomous Range & Refuel Validator (`Module3_RangeValidator`)**
-   - Evaluates current tank range (`currentFuel * effectiveMileage`) against planned trip distance and calculates fuel deficit liters and minimum top-up cost when refueling is required.
-4. **8-Bit ECU Telematics Bitmask Diagnostics (`Module4_TelematicsCheck`)**
-   - Packs live sensor thresholds into an 8-bit status register (`telematicsFlag`) using bitwise `OR` and decodes individual flags non-destructively using `TEST`:
-     - **Bit 0 (`01h`):** Overspeed Hazard (`> 120 km/h`)
-     - **Bit 1 (`02h`):** High Engine Load / RPM Hazard (`> 4500 RPM`)
-     - **Bit 2 (`04h`):** Low Fuel Reserve Advisory (`< 15%` tank capacity)
-     - **Bit 3 (`08h`):** Engine Coolant Overheat Hazard (`> 105°C`)
-5. **Eco-Analytics & CO2 Grader (`Module5_EcoAnalytics`)**
-   - Estimates $\text{CO}_2$ emissions (`litersNeeded * 2` via `SHL`) and assigns a color-coded **Grade A, B, or C** based on effective mileage and active ECU hazard flags.
-6. **File Report Export (`SaveReportToFile`)**
-   - Converts 32-bit integers to ASCII characters via stack reversal (`DIV 10` + `PUSH`/`POP`) and exports a formatted diagnostic summary to `DriveLogix_Report.txt` using `CreateOutputFile`, `WriteToFile`, and `CloseFile`.
+1. **Vehicle & Route Selector (Module 1):** Displays a catalog of 50 Pakistani vehicles (IDs `0` to `49`) stored across parallel `DWORD` arrays (`carNames`, `tankCapacities`, `cityAcOff`, `cityAcOn`, `hwyAcOff`, `hwyAcOn`). Looks up tank capacity and effective mileage in `O(1)` time using scaled indexed addressing (`[esi * 4]`).
+2. **Fuel & Cost Split Calculator (Module 2):** Computes required fuel, total PKR trip expense, and per-passenger cost share using 32-bit unsigned `DIV` and `IMUL`.
+3. **Range & Refueling Validator (Module 3):** Compares current tank range against planned trip length. Triggers a color-coded refueling alert with exact deficit liters and minimum top-up cost when fuel is insufficient.
+4. **8-Bit ECU Telematics Diagnostics (Module 4):** Evaluates speed (`> 120 km/h`), engine RPM (`> 4500 RPM`), low fuel reserve (`< 15%` of tank capacity), and coolant temperature (`> 105°C`). Packs alerts into Bits 0–3 of `telematicsFlag` using `OR`, displays the binary register with `WriteBin`, and decodes active warnings non-destructively using `TEST`.
+5. **Eco-Analytics & Carbon Footprint (Module 5):** Calculates estimated CO2 emissions (`litersNeeded * 2` via `SHL`) and assigns Driver Efficiency Grade **A**, **B**, or **C** based on mileage thresholds and active ECU hazard flags.
+6. **File Export (`DriveLogix_Report.txt`):** Writes the trip diagnostic summary directly to disk using `CreateOutputFile`, `WriteToFile`, `Str_length`, and `CloseFile`.
 
 ---
 
-## Build & Run Instructions (Visual Studio x86)
+## Architecture & Assembly Concepts
 
-### Prerequisites
-- **Visual Studio 2022 / 2026** with **Desktop development with C++** installed.
-- **Irvine32 Library** extracted to `C:\Irvine` (`Irvine32.inc`, `Irvine32.lib`, `SmallWin.inc`, `VirtualKeys.inc`).
-
-### Setup Steps
-1. Create an **Empty Project (C++)** in Visual Studio and set the active solution platform to **`x86`** (32-bit).
-2. Right-click the project in Solution Explorer → **Build Dependencies → Build Customizations** → enable **`masm (.targets, .props)`**.
-3. Add `DriveLogix.asm` to the project (`Add → Existing Item`).
-4. Open **Project Properties**:
-   - **Microsoft Macro Assembler → General → Include Paths:** add `C:\Irvine`
-   - **Linker → General → Additional Library Directories:** add `C:\Irvine`
-   - **Linker → Input → Additional Dependencies:** add `Irvine32.lib`
-5. Build (`Ctrl + Shift + B`) and run (`Ctrl + F5`).
+* **Data Structures:** 50 null-terminated `BYTE` vehicle strings indexed via a 50-element `DWORD` offset pointer array (`carNames`) paired with five parallel `DWORD` specification arrays.
+* **Procedures (7 Modules):** `main`, `Module1_SelectVehicle`, `Module2_FuelAndCost`, `Module3_RangeValidator`, `Module4_TelematicsCheck`, `Module5_EcoAnalytics`, and `SaveReportToFile`.
+* **Irvine32 Routines:** `Clrscr`, `SetTextColor`, `WriteString`, `WriteDec`, `WriteBin`, `ReadInt`, `Crlf`, `WaitMsg`, `Str_length`, `CreateOutputFile`, `WriteToFile`, `CloseFile`.
 
 ---
 
-## Sample Output (`DriveLogix_Report.txt`)
+## Sample Output
 
+### Test Scenario
+* **Vehicle:** ID `30` — Honda Civic X (1.8L) | **Route:** Highway (`2`) | **Climate:** AC On (`2`)
+* **Trip Inputs:** `330 km`, `PKR 324/L`, `3` passengers, `5 L` in tank
+* **ECU Inputs:** `135 km/h`, `4800 RPM`, `110°C`
+* **Results:** `30 L` required (`PKR 9720` total, `PKR 3240` per passenger), `55 km` tank range (`25 L` deficit, `PKR 8100` top-up), ECU register `0000 1111`, `60 kg` CO2, **Grade C**.
+
+### Generated `DriveLogix_Report.txt`
 ```text
 DRIVELOGIX: TRIP & TELEMATICS DIAGNOSTIC REPORT
 Vehicle Model: Honda Civic X (1.8L)
-Effective Mileage: 11
-Trip Distance (km): 330
-Fuel Required (L): 30
-Total Cost (PKR): 9720
-Per Passenger (PKR): 3240
-Refuel Deficit (L): 25
-CO2 Footprint (kg): 60
-Eco Efficiency Grd: C
+Route Type: Highway/Motorway
+Climate Control: AC On
+Refuel Status: Refueling Stop Required
+ECU Status: Active Hazard Flags Detected
+Eco Efficiency Grade: C
+```
+
+---
+
+## Build & Run (Visual Studio + MASM)
+
+1. Install **Visual Studio** (Desktop development with C++) and Kip Irvine's **Irvine32** library at `C:\Irvine`.
+2. Create an Empty C++ Project, set the build platform to **x86 (Win32)**, and enable **Build Dependencies → Build Customizations → masm**.
+3. Add `Drivelogix.asm` to the project and configure Project Properties:
+   * **Microsoft Macro Assembler → General → Include Paths:** `C:\Irvine`
+   * **Linker → General → Additional Library Directories:** `C:\Irvine`
+   * **Linker → Input → Additional Dependencies:** `Irvine32.lib;kernel32.lib;user32.lib`
+   * **Linker → System → SubSystem:** `Console (/SUBSYSTEM:CONSOLE)`
+4. Press `Ctrl + Shift + B` to build and `Ctrl + F5` to run.
+
+---
+
+## Repository Contents
+
+* `Drivelogix.asm` — Complete 32-bit x86 MASM source code
+* `DriveLogix_Report.txt` — Sample diagnostic report generated by Option 5
+* `README.md` — Project overview and build instructions

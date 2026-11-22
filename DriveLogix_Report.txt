@@ -1,10 +1,7 @@
 DRIVELOGIX: TRIP & TELEMATICS DIAGNOSTIC REPORT
 Vehicle Model: Honda Civic X (1.8L)
-Effective Mileage: 11
-Trip Distance (km): 330
-Fuel Required (L): 30
-Total Cost (PKR): 9720
-Per Passenger (PKR): 3240
-Refuel Deficit (L): 25
-CO2 Footprint (kg): 60
-Eco Efficiency Grd: C
+Route Type: Highway/Motorway
+Climate Control: AC On
+Refuel Status: Refueling Stop Required
+ECU Status: Active Hazard Flags Detected
+Eco Efficiency Grade: C
